@@ -8,7 +8,7 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 
 # Initialize presets
 presets = {
-    "Digital Extremes": {"x": 3420, "y": 940, "width": 200, "height": 100}
+    "Placeholder": {"x": 3420, "y": 940, "width": 200, "height": 100}
 }
 
 def read_screen_area(x, y, width, height):
@@ -70,24 +70,28 @@ def update_preview():
 # Create the main window
 root = tk.Tk()
 root.title("Screen Reader")
-root.geometry("500x400")  # Increase the size of the main window
+root.geometry("428x428")  # Increase the size of the main window
 
-# Create and place the input fields and labels
+# Create and place the input fields and labels with default values
 tk.Label(root, text="X:").grid(row=0, column=0, padx=10, pady=5)
 entry_x = tk.Entry(root)
 entry_x.grid(row=0, column=1, padx=10, pady=5)
+entry_x.insert(0, "1000")  # Default value
 
 tk.Label(root, text="Y:").grid(row=1, column=0, padx=10, pady=5)
 entry_y = tk.Entry(root)
 entry_y.grid(row=1, column=1, padx=10, pady=5)
+entry_y.insert(0, "500")  # Default value
 
 tk.Label(root, text="Width:").grid(row=2, column=0, padx=10, pady=5)
 entry_width = tk.Entry(root)
 entry_width.grid(row=2, column=1, padx=10, pady=5)
+entry_width.insert(0, "100")  # Default value
 
 tk.Label(root, text="Height:").grid(row=3, column=0, padx=10, pady=5)
 entry_height = tk.Entry(root)
 entry_height.grid(row=3, column=1, padx=10, pady=5)
+entry_height.insert(0, "100")  # Default value
 
 # Create and place the preset dropdown menu
 preset_var = tk.StringVar(root)
