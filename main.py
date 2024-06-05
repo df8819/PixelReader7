@@ -1,6 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
-from PIL import ImageGrab
+from tkinter import messagebox
+from PIL import ImageGrab, Image, ImageTk
 import pytesseract
 
 # Set the tesseract command if not set in the PATH environment variable
@@ -11,14 +11,12 @@ presets = {
     "Digital Extremes": {"x": 3420, "y": 940, "width": 200, "height": 100}
 }
 
-
 def read_screen_area(x, y, width, height):
     # Capture the screen area
     img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
     # Use pytesseract to extract text
     text = pytesseract.image_to_string(img)
     return text
-
 
 def on_read_button_click():
     try:
@@ -38,7 +36,7 @@ def on_read_button_click():
     if save_text:
         with open("extracted_text.txt", "a") as file:  # Change to append mode
             file.write(extracted_text + "\n")
-
+        messagebox.showinfo("Success", "Text appended to extracted_text.txt")
 
 def on_preset_selected(*args):
     preset_name = preset_var.get()
@@ -52,28 +50,27 @@ def on_preset_selected(*args):
         entry_width.insert(0, preset["width"])
         entry_height.delete(0, tk.END)
         entry_height.insert(0, preset["height"])
+    update_preview()
 
-
-def add_preset():
-    preset_name = simpledialog.askstring("Preset Name", "Enter preset name:")
-    if not preset_name:
-        return
+def update_preview():
     try:
         x = int(entry_x.get())
         y = int(entry_y.get())
         width = int(entry_width.get())
         height = int(entry_height.get())
+        img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
+        img = img.resize((400, 200))  # Resize for the preview window
+        img = ImageTk.PhotoImage(img)
+        preview_label.config(image=img)
+        preview_label.image = img
     except ValueError:
-        messagebox.showerror("Input Error", "Please enter valid integers for dimensions.")
-        return
-    presets[preset_name] = {"x": x, "y": y, "width": width, "height": height}
-    preset_menu['menu'].add_command(label=preset_name, command=tk._setit(preset_var, preset_name))
-    messagebox.showinfo("Success", f"Preset '{preset_name}' added.")
-
+        pass
+    root.after(250, update_preview)
 
 # Create the main window
 root = tk.Tk()
 root.title("Screen Reader")
+root.geometry("500x400")  # Increase the size of the main window
 
 # Create and place the input fields and labels
 tk.Label(root, text="X:").grid(row=0, column=0, padx=10, pady=5)
@@ -103,8 +100,12 @@ preset_var.trace("w", on_preset_selected)
 read_button = tk.Button(root, text="Read Screen", command=on_read_button_click)
 read_button.grid(row=5, column=0, columnspan=2, pady=10)
 
-add_preset_button = tk.Button(root, text="Add Preset", command=add_preset)
-add_preset_button.grid(row=6, column=0, columnspan=2, pady=10)
+# Create and place the preview label
+preview_label = tk.Label(root)
+preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+# Run the preview update function
+update_preview()
 
 # Run the Tkinter event loop
 root.mainloop()
