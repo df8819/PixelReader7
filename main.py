@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, Toplevel, Canvas
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
 
@@ -8,8 +8,10 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 
 # Initialize presets
 presets = {
-    "Placeholder": {"x": 3420, "y": 940, "width": 200, "height": 100}
+    "Digital Extremes": {"x": 3420, "y": 940, "width": 200, "height": 100}
 }
+
+refresh_rate = 250  # Refresh rate in milliseconds
 
 def read_screen_area(x, y, width, height):
     # Capture the screen area
@@ -65,12 +67,60 @@ def update_preview():
         preview_label.image = img
     except ValueError:
         pass
-    root.after(250, update_preview)
+    root.after(refresh_rate, update_preview)
+
+def select_area():
+    selection_window = Toplevel(root)
+    selection_window.attributes("-fullscreen", True)
+    selection_window.attributes("-alpha", 0.3)
+
+    canvas = Canvas(selection_window, cursor="cross")
+    canvas.pack(fill=tk.BOTH, expand=True)
+
+    rect = None
+    start_x = start_y = 0
+
+    def on_button_press(event):
+        nonlocal rect, start_x, start_y
+        start_x = canvas.canvasx(event.x)
+        start_y = canvas.canvasy(event.y)
+        rect = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline='red', width=2)
+
+    def on_mouse_move(event):
+        nonlocal rect
+        cur_x = canvas.canvasx(event.x)
+        cur_y = canvas.canvasy(event.y)
+        canvas.coords(rect, start_x, start_y, cur_x, cur_y)
+
+    def on_button_release(event):
+        nonlocal start_x, start_y
+        end_x = canvas.canvasx(event.x)
+        end_y = canvas.canvasy(event.y)
+        selection_window.destroy()
+
+        x = int(min(start_x, end_x))
+        y = int(min(start_y, end_y))
+        width = int(abs(end_x - start_x))
+        height = int(abs(end_y - start_y))
+
+        entry_x.delete(0, tk.END)
+        entry_x.insert(0, x)
+        entry_y.delete(0, tk.END)
+        entry_y.insert(0, y)
+        entry_width.delete(0, tk.END)
+        entry_width.insert(0, width)
+        entry_height.delete(0, tk.END)
+        entry_height.insert(0, height)
+        update_preview()
+
+    canvas.bind("<ButtonPress-1>", on_button_press)
+    canvas.bind("<B1-Motion>", on_mouse_move)
+    canvas.bind("<ButtonRelease-1>", on_button_release)
 
 # Create the main window
 root = tk.Tk()
 root.title("Screen Reader")
-root.geometry("428x428")  # Increase the size of the main window
+root.geometry("500x450")  # Increase the size of the main window
 
 # Create and place the input fields and labels with default values
 tk.Label(root, text="X:").grid(row=0, column=0, padx=10, pady=5)
@@ -104,9 +154,12 @@ preset_var.trace("w", on_preset_selected)
 read_button = tk.Button(root, text="Read Screen", command=on_read_button_click)
 read_button.grid(row=5, column=0, columnspan=2, pady=10)
 
+select_area_button = tk.Button(root, text="Select Area", command=select_area)
+select_area_button.grid(row=6, column=0, columnspan=2, pady=10)
+
 # Create and place the preview label
 preview_label = tk.Label(root)
-preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+preview_label.grid(row=7, column=0, columnspan=2, padx=10, pady=5)
 
 # Run the preview update function
 update_preview()
