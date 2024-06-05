@@ -8,10 +8,11 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 
 # Initialize presets
 presets = {
-    "Digital Extremes": {"x": 3420, "y": 940, "width": 200, "height": 100}
+    "Placeholder": {"x": 3420, "y": 940, "width": 200, "height": 100}
 }
 
-refresh_rate = 250  # Refresh rate in milliseconds
+refresh_rate = 150  # Refresh rate in milliseconds
+
 
 def read_screen_area(x, y, width, height):
     # Capture the screen area
@@ -19,6 +20,7 @@ def read_screen_area(x, y, width, height):
     # Use pytesseract to extract text
     text = pytesseract.image_to_string(img)
     return text
+
 
 def on_read_button_click():
     try:
@@ -40,6 +42,7 @@ def on_read_button_click():
             file.write(extracted_text + "\n")
         messagebox.showinfo("Success", "Text appended to extracted_text.txt")
 
+
 def on_preset_selected(*args):
     preset_name = preset_var.get()
     if preset_name in presets:
@@ -54,6 +57,7 @@ def on_preset_selected(*args):
         entry_height.insert(0, preset["height"])
     update_preview()
 
+
 def update_preview():
     try:
         x = int(entry_x.get())
@@ -61,7 +65,7 @@ def update_preview():
         width = int(entry_width.get())
         height = int(entry_height.get())
         img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
-        img = img.resize((400, 200))  # Resize for the preview window
+        img = img.resize((480, 320))  # Resize for the preview window
         img = ImageTk.PhotoImage(img)
         preview_label.config(image=img)
         preview_label.image = img
@@ -69,10 +73,11 @@ def update_preview():
         pass
     root.after(refresh_rate, update_preview)
 
+
 def select_area():
     selection_window = Toplevel(root)
     selection_window.attributes("-fullscreen", True)
-    selection_window.attributes("-alpha", 0.3)
+    selection_window.attributes("-alpha", 0.2)
 
     canvas = Canvas(selection_window, cursor="cross")
     canvas.pack(fill=tk.BOTH, expand=True)
@@ -117,10 +122,12 @@ def select_area():
     canvas.bind("<B1-Motion>", on_mouse_move)
     canvas.bind("<ButtonRelease-1>", on_button_release)
 
+
 # Create the main window
 root = tk.Tk()
 root.title("Screen Reader")
-root.geometry("500x450")  # Increase the size of the main window
+root.geometry("500x600")  # Increase the size of the main window
+root.resizable(False, False)
 
 # Create and place the input fields and labels with default values
 tk.Label(root, text="X:").grid(row=0, column=0, padx=10, pady=5)
