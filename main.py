@@ -8,7 +8,7 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 
 # Initialize presets
 presets = {
-    "Placeholder": {"x": 3420, "y": 940, "width": 200, "height": 100}
+    "Placeholder": {"x": 1420, "y": 940, "width": 200, "height": 100}
 }
 
 refresh_rate = 150  # Refresh rate in milliseconds
