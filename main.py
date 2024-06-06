@@ -1,24 +1,34 @@
+import os
 import tkinter as tk
-from tkinter import messagebox, Toplevel, Canvas
+from tkinter import messagebox, Toplevel, Canvas, filedialog
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
 import threading
-import time  # Ensure the correct time module is imported
+import time
 
 # Set the tesseract command if not set in the PATH environment variable
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Adjust the path to tesseract executable
 
-# Initialize presets
-presets = {
-    "Placeholder": {"x": 1420, "y": 940, "width": 200, "height": 100}
-}
-
 refresh_rate = 100  # Refresh rate in milliseconds
-
 
 class ScreenReaderApp:
     def __init__(self, root):
         self.root = root
+
+        # Check if Tesseract is installed at the given path
+        self.tesseract_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        if not os.path.exists(self.tesseract_path):
+            self.tesseract_path = filedialog.askopenfilename(
+                title="Select Tesseract Executable",
+                filetypes=[("Executable files", "*.exe")]
+            )
+            if not self.tesseract_path:
+                messagebox.showerror("File Not Found",
+                                     "Tesseract executable not found. Please install or select the correct file.")
+                root.destroy()
+                return
+        pytesseract.pytesseract.tesseract_cmd = self.tesseract_path
+
         self.setup_ui()
         self.is_running = True
         self.update_thread = threading.Thread(target=self.update_preview)
@@ -28,6 +38,7 @@ class ScreenReaderApp:
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
         self.root.geometry("500x600")
+        self.center_window(self.root)  # Center the main window
         # self.root.resizable(False, False)
 
         # Dimension entry
@@ -53,26 +64,31 @@ class ScreenReaderApp:
 
         # Create a frame to hold the buttons
         button_frame = tk.Frame(self.root)
-        button_frame.grid(row=4, column=0, columnspan=3, pady=10)
-
-        # Preset Menu
-        self.preset_var = tk.StringVar(self.root)
-        self.preset_var.set("Select Preset")
-        self.preset_menu = tk.OptionMenu(button_frame, self.preset_var, *presets.keys())
-        self.preset_menu.grid(row=0, column=0, padx=10, pady=5)
-        self.preset_var.trace("w", self.on_preset_selected)
+        button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
         # Read Screen Button
-        self.read_button = tk.Button(button_frame, text="Read Screen", command=self.on_read_button_click)
-        self.read_button.grid(row=0, column=2, padx=10, pady=5)
+        self.read_button = tk.Button(button_frame, text="Read Area", command=self.on_read_button_click)
+        self.read_button.grid(row=0, column=2, padx=15, pady=5)
 
         # Select Area Button
         self.select_area_button = tk.Button(button_frame, text="Select Area", command=self.select_area)
-        self.select_area_button.grid(row=0, column=1, padx=10, pady=5)
+        self.select_area_button.grid(row=0, column=1, padx=15, pady=5)
+
+        # Preview label
+        self.text_label = tk.Label(text="Live preview of the selected area, ready to be read:")
+        self.text_label.grid(row=5, column=0, columnspan=3, padx=10)
 
         # Preview window
         self.preview_label = tk.Label(self.root)
-        self.preview_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+        self.preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+    def center_window(self, window):
+        window.update_idletasks()
+        width = window.winfo_width()
+        height = window.winfo_height()
+        x = (window.winfo_screenwidth() // 2) - (width // 2)
+        y = (window.winfo_screenheight() // 2) - (height // 2)
+        window.geometry(f'{width}x{height}+{x}+{y}')
 
     def read_screen_area(self, x, y, width, height):
         img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
@@ -95,6 +111,7 @@ class ScreenReaderApp:
         text_window = Toplevel(self.root)
         text_window.title("Extracted Text")
         text_window.geometry("800x600")
+        self.center_window(text_window)  # Center the new window
 
         # Create a Text widget to display the extracted text
         text_widget = tk.Text(text_window, wrap='word')
@@ -111,20 +128,6 @@ class ScreenReaderApp:
         with open("extracted_text.txt", "a") as file:
             file.write(text + "\n")
         window.destroy()
-
-    def on_preset_selected(self, *args):
-        preset_name = self.preset_var.get()
-        if preset_name in presets:
-            preset = presets[preset_name]
-            self.entry_x.delete(0, tk.END)
-            self.entry_x.insert(0, preset["x"])
-            self.entry_y.delete(0, tk.END)
-            self.entry_y.insert(0, preset["y"])
-            self.entry_width.delete(0, tk.END)
-            self.entry_width.insert(0, preset["width"])
-            self.entry_height.delete(0, tk.END)
-            self.entry_height.insert(0, preset["height"])
-        self.update_preview()
 
     def update_preview(self):
         while self.is_running:
@@ -149,6 +152,7 @@ class ScreenReaderApp:
         selection_window = Toplevel(self.root)
         selection_window.attributes("-fullscreen", True)
         selection_window.attributes("-alpha", 0.2)
+        self.center_window(selection_window)
 
         canvas = Canvas(selection_window, cursor="cross")
         canvas.pack(fill=tk.BOTH, expand=True)
@@ -197,7 +201,6 @@ class ScreenReaderApp:
         canvas.bind("<ButtonPress-1>", on_button_press)
         canvas.bind("<B1-Motion>", on_mouse_move)
         canvas.bind("<ButtonRelease-1>", on_button_release)
-
 
 if __name__ == "__main__":
     root = tk.Tk()
