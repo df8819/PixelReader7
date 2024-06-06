@@ -7,10 +7,14 @@ import pytesseract
 import threading
 import time
 
+VERSION = "v1.0"
+github_link = "https://github.com/df8819/PixelReader7/"
+
 # Set the tesseract command if not set in the PATH environment variable
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Adjust the path to tesseract executable
 
 refresh_rate = 100  # Refresh rate in milliseconds
+
 
 class ScreenReaderApp:
     def __init__(self, root):
@@ -70,11 +74,13 @@ class ScreenReaderApp:
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
         # Read Screen Button
-        self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click, bootstyle="primary")
+        self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click,
+                                      bootstyle="primary")
         self.read_button.grid(row=0, column=2, padx=15, pady=5)
 
         # Select Area Button
-        self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area, bootstyle="secondary")
+        self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area,
+                                             bootstyle="secondary")
         self.select_area_button.grid(row=0, column=1, padx=15, pady=5)
 
         # Preview label
@@ -124,11 +130,12 @@ class ScreenReaderApp:
 
         # Add a button to save the text and close the window
         save_button = ttk.Button(text_window, text="Save Text",
-                                command=lambda: self.save_extracted_text(extracted_text, text_window), bootstyle="success")
+                                 command=lambda: self.save_extracted_text(extracted_text, text_window),
+                                 bootstyle="success")
         save_button.pack(pady=10)
 
     def save_extracted_text(self, text, window):
-        with open("extracted_text.txt", "a") as file:
+        with open("Extracted.txt", "a") as file:
             file.write(text + "\n")
         window.destroy()
 
@@ -204,6 +211,7 @@ class ScreenReaderApp:
         canvas.bind("<ButtonPress-1>", on_button_press)
         canvas.bind("<B1-Motion>", on_mouse_move)
         canvas.bind("<ButtonRelease-1>", on_button_release)
+
 
 if __name__ == "__main__":
     root = ttk.Window(themename="darkly")
