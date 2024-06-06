@@ -26,10 +26,11 @@ class ScreenReaderApp:
         self.update_thread.start()
 
     def setup_ui(self):
-        self.root.title("Screen Reader")
+        self.root.title("PixelReader7 - Extract text from everything")
         self.root.geometry("500x600")
-        self.root.resizable(False, False)
+        # self.root.resizable(False, False)
 
+        # Dimension entry
         tk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
         self.entry_x = tk.Entry(self.root)
         self.entry_x.grid(row=0, column=1, padx=10, pady=5)
@@ -43,27 +44,35 @@ class ScreenReaderApp:
         tk.Label(self.root, text="Width:").grid(row=2, column=0, padx=10, pady=5)
         self.entry_width = tk.Entry(self.root)
         self.entry_width.grid(row=2, column=1, padx=10, pady=5)
-        self.entry_width.insert(0, "100")
+        self.entry_width.insert(0, "250")
 
         tk.Label(self.root, text="Height:").grid(row=3, column=0, padx=10, pady=5)
         self.entry_height = tk.Entry(self.root)
         self.entry_height.grid(row=3, column=1, padx=10, pady=5)
-        self.entry_height.insert(0, "100")
+        self.entry_height.insert(0, "250")
 
+        # Create a frame to hold the buttons
+        button_frame = tk.Frame(self.root)
+        button_frame.grid(row=4, column=0, columnspan=3, pady=10)
+
+        # Preset Menu
         self.preset_var = tk.StringVar(self.root)
         self.preset_var.set("Select Preset")
-        self.preset_menu = tk.OptionMenu(self.root, self.preset_var, *presets.keys())
-        self.preset_menu.grid(row=4, column=0, columnspan=2, padx=10, pady=5)
+        self.preset_menu = tk.OptionMenu(button_frame, self.preset_var, *presets.keys())
+        self.preset_menu.grid(row=0, column=0, padx=10, pady=5)
         self.preset_var.trace("w", self.on_preset_selected)
 
-        self.read_button = tk.Button(self.root, text="Read Screen", command=self.on_read_button_click)
-        self.read_button.grid(row=5, column=0, columnspan=2, pady=10)
+        # Read Screen Button
+        self.read_button = tk.Button(button_frame, text="Read Screen", command=self.on_read_button_click)
+        self.read_button.grid(row=0, column=2, padx=10, pady=5)
 
-        self.select_area_button = tk.Button(self.root, text="Select Area", command=self.select_area)
-        self.select_area_button.grid(row=6, column=0, columnspan=2, pady=10)
+        # Select Area Button
+        self.select_area_button = tk.Button(button_frame, text="Select Area", command=self.select_area)
+        self.select_area_button.grid(row=0, column=1, padx=10, pady=5)
 
+        # Preview window
         self.preview_label = tk.Label(self.root)
-        self.preview_label.grid(row=7, column=0, columnspan=2, padx=10, pady=5)
+        self.preview_label.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
 
     def read_screen_area(self, x, y, width, height):
         img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
@@ -81,12 +90,27 @@ class ScreenReaderApp:
             return
 
         extracted_text = self.read_screen_area(x, y, width, height)
-        save_text = messagebox.askyesno("Confirm Text",
-                                        f"Extracted text:\n\n{extracted_text}\n\nDo you want to save this text?")
-        if save_text:
-            with open("extracted_text.txt", "a") as file:
-                file.write(extracted_text + "\n")
-            messagebox.showinfo("Success", "Text appended to extracted_text.txt")
+
+        # Create a new Toplevel window to display the extracted text
+        text_window = Toplevel(self.root)
+        text_window.title("Extracted Text")
+        text_window.geometry("800x600")
+
+        # Create a Text widget to display the extracted text
+        text_widget = tk.Text(text_window, wrap='word')
+        text_widget.pack(expand=1, fill='both')
+        text_widget.insert(tk.END, extracted_text)
+        text_widget.config(state=tk.NORMAL)  # Make the text selectable
+
+        # Add a button to save the text and close the window
+        save_button = tk.Button(text_window, text="Save Text",
+                                command=lambda: self.save_extracted_text(extracted_text, text_window))
+        save_button.pack(pady=10)
+
+    def save_extracted_text(self, text, window):
+        with open("extracted_text.txt", "a") as file:
+            file.write(text + "\n")
+        window.destroy()
 
     def on_preset_selected(self, *args):
         preset_name = self.preset_var.get()
@@ -110,7 +134,7 @@ class ScreenReaderApp:
                 width = int(self.entry_width.get())
                 height = int(self.entry_height.get())
                 img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
-                img = img.resize((480, 320))
+                img = img.resize((480, 400))
                 img = ImageTk.PhotoImage(img)
                 self.preview_label.config(image=img)
                 self.preview_label.image = img
