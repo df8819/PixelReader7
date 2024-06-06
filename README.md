@@ -1,7 +1,7 @@
 
 # 📸 PixelReader7 - Extract Text from Everything!
 
-Welcome to **PixelReader7**, the app that lets you extract text from anything on your screen. Need to capture that juicy quote from a video, meme or an annoying popup? Here you go.
+The app that lets you extract text from anything on your screen. Need to capture that juicy quote from a video, meme or an annoying popup? Here you go.
 
 ## 🔥 Features
 - **Dark Theme**: Because why not.
@@ -29,12 +29,13 @@ pip install ttkbootstrap pytesseract pillow
 ```
 
 ## ⚡ Quick Start
+- Run.bat or
 ```sh
 python main.py
 ```
 
 ## 📸 Screenshots
-_Dark theme goodness coming soon!_
+![Image](1717710720.png)
 
 ## 💡 Pro Tips
 - **Select Carefully**: Make sure you’ve got the right area selected, or you might end up with your desktop wallpaper text.
