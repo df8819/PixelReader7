@@ -1,5 +1,6 @@
 import os
-import tkinter as tk
+import ttkbootstrap as ttk
+from ttkbootstrap import Style
 from tkinter import messagebox, Toplevel, Canvas, filedialog
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
@@ -37,49 +38,51 @@ class ScreenReaderApp:
 
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
-        self.root.geometry("500x600")
+        self.root.geometry("500x650")
         self.center_window(self.root)  # Center the main window
-        # self.root.resizable(False, False)
+        self.root.resizable(False, False)
+
+        style = Style(theme="darkly")  # Use the 'darkly' theme from ttkbootstrap
 
         # Dimension entry
-        tk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
-        self.entry_x = tk.Entry(self.root)
+        ttk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
+        self.entry_x = ttk.Entry(self.root)
         self.entry_x.grid(row=0, column=1, padx=10, pady=5)
-        self.entry_x.insert(0, "1000")
+        self.entry_x.insert(0, "500")
 
-        tk.Label(self.root, text="Y:").grid(row=1, column=0, padx=10, pady=5)
-        self.entry_y = tk.Entry(self.root)
+        ttk.Label(self.root, text="Y:").grid(row=1, column=0, padx=10, pady=5)
+        self.entry_y = ttk.Entry(self.root)
         self.entry_y.grid(row=1, column=1, padx=10, pady=5)
         self.entry_y.insert(0, "500")
 
-        tk.Label(self.root, text="Width:").grid(row=2, column=0, padx=10, pady=5)
-        self.entry_width = tk.Entry(self.root)
+        ttk.Label(self.root, text="Width:").grid(row=2, column=0, padx=10, pady=5)
+        self.entry_width = ttk.Entry(self.root)
         self.entry_width.grid(row=2, column=1, padx=10, pady=5)
         self.entry_width.insert(0, "250")
 
-        tk.Label(self.root, text="Height:").grid(row=3, column=0, padx=10, pady=5)
-        self.entry_height = tk.Entry(self.root)
+        ttk.Label(self.root, text="Height:").grid(row=3, column=0, padx=10, pady=5)
+        self.entry_height = ttk.Entry(self.root)
         self.entry_height.grid(row=3, column=1, padx=10, pady=5)
         self.entry_height.insert(0, "250")
 
         # Create a frame to hold the buttons
-        button_frame = tk.Frame(self.root)
+        button_frame = ttk.Frame(self.root)
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
         # Read Screen Button
-        self.read_button = tk.Button(button_frame, text="Read Area", command=self.on_read_button_click)
+        self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click, bootstyle="primary")
         self.read_button.grid(row=0, column=2, padx=15, pady=5)
 
         # Select Area Button
-        self.select_area_button = tk.Button(button_frame, text="Select Area", command=self.select_area)
+        self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area, bootstyle="secondary")
         self.select_area_button.grid(row=0, column=1, padx=15, pady=5)
 
         # Preview label
-        self.text_label = tk.Label(text="Live preview of the selected area, ready to be read:")
+        self.text_label = ttk.Label(self.root, text="Live preview of the selected area, ready to be read:")
         self.text_label.grid(row=5, column=0, columnspan=3, padx=10)
 
         # Preview window
-        self.preview_label = tk.Label(self.root)
+        self.preview_label = ttk.Label(self.root)
         self.preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
 
     def center_window(self, window):
@@ -114,14 +117,14 @@ class ScreenReaderApp:
         self.center_window(text_window)  # Center the new window
 
         # Create a Text widget to display the extracted text
-        text_widget = tk.Text(text_window, wrap='word')
+        text_widget = ttk.Text(text_window, wrap='word')
         text_widget.pack(expand=1, fill='both')
-        text_widget.insert(tk.END, extracted_text)
-        text_widget.config(state=tk.NORMAL)  # Make the text selectable
+        text_widget.insert(ttk.END, extracted_text)
+        text_widget.config(state=ttk.NORMAL)  # Make the text selectable
 
         # Add a button to save the text and close the window
-        save_button = tk.Button(text_window, text="Save Text",
-                                command=lambda: self.save_extracted_text(extracted_text, text_window))
+        save_button = ttk.Button(text_window, text="Save Text",
+                                command=lambda: self.save_extracted_text(extracted_text, text_window), bootstyle="success")
         save_button.pack(pady=10)
 
     def save_extracted_text(self, text, window):
@@ -155,7 +158,7 @@ class ScreenReaderApp:
         self.center_window(selection_window)
 
         canvas = Canvas(selection_window, cursor="cross")
-        canvas.pack(fill=tk.BOTH, expand=True)
+        canvas.pack(fill=ttk.BOTH, expand=True)
 
         rect = None
         start_x = start_y = 0
@@ -183,13 +186,13 @@ class ScreenReaderApp:
             width = int(abs(end_x - start_x))
             height = int(abs(end_y - start_y))
 
-            self.entry_x.delete(0, tk.END)
+            self.entry_x.delete(0, ttk.END)
             self.entry_x.insert(0, x)
-            self.entry_y.delete(0, tk.END)
+            self.entry_y.delete(0, ttk.END)
             self.entry_y.insert(0, y)
-            self.entry_width.delete(0, tk.END)
+            self.entry_width.delete(0, ttk.END)
             self.entry_width.insert(0, width)
-            self.entry_height.delete(0, tk.END)
+            self.entry_height.delete(0, ttk.END)
             self.entry_height.insert(0, height)
 
             # Restart preview thread
@@ -203,6 +206,6 @@ class ScreenReaderApp:
         canvas.bind("<ButtonRelease-1>", on_button_release)
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = ttk.Window(themename="darkly")
     app = ScreenReaderApp(root)
     root.mainloop()
