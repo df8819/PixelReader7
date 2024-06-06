@@ -1,5 +1,5 @@
 
-# 📸 PixelReader7 - Extract Text from Everything!
+# 📸 PixelReader7 - Extract Text from Everything
 
 The app that lets you extract text from anything on your screen. Need to capture that juicy quote from a video, meme or an annoying popup? Here you go.
 
