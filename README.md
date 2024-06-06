@@ -10,7 +10,7 @@ The app that lets you extract text from anything on your screen. Need to capture
 - **Select Area**: Easy area selection.
 
 ## 🚀 How to Use
-1. **Run the App**: Execute Run.bat _(creates/deletes VBS script to get elevated rights)_ or `python main.py` for a script-less approach.
+1. **Run the App**: Execute Run.bat or `python main.py`.
 2. **Set Dimensions**: Enter the X, Y, Width, and Height of the area you want to capture or use the area selector _(less pain)_.
 3. **Select Area**: Click 'Select Area' to visually choose your region. 
 4. **Read Area**: Click 'Read Area' to extract text from the area.
