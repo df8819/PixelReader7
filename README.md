@@ -1,22 +1,23 @@
 
 # 📸 PixelReader7 - Extract Text from Everything!
 
-Welcome to **PixelReader7**, the app that lets you steal text from anything on your screen. Need to capture that juicy quote from a video or an annoying popup? We've got you covered!
+Welcome to **PixelReader7**, the app that lets you extract text from anything on your screen. Need to capture that juicy quote from a video, meme or an annoying popup? Here you go.
 
 ## 🔥 Features
-- **Dark Theme**: Because we know you’re up coding all night.
-- **Real-Time Preview**: See what you’re about to snatch before you hit the button.
-- **Super Fast**: Refreshes quicker than your coffee refills.
-- **Select Area**: Box in your target and capture away.
+- **Dark Theme**: Because why not.
+- **Real-Time Preview**: See what you’re about to capture.
+- **Super Fast**: 100ms refresh rate. Useless but smoother.
+- **Select Area**: Easy area selection
 
 ## 🚀 How to Use
-1. **Run the App**: Just double-click it, or run `python main.py` if you’re fancy.
-2. **Set Dimensions**: Enter the X, Y, Width, and Height of the area you want to capture.
+1. **Run the App**: Just Run.bat it, or `python main.py` if you’re fancy.
+2. **Set Dimensions**: Enter the X, Y, Width, and Height of the area you want to capture or use the area selector (less pain).
 3. **Select Area**: Click 'Select Area' to visually choose your region. 
 4. **Read Area**: Click 'Read Area' to extract the text.
-5. **Save Text**: A new window will pop up with your extracted text. Click 'Save Text' to keep it forever.
+5. **Save Text**: A new window will pop up with your extracted text. Click 'Save Text' insta save in root folder.
 
 ## 🛠 Requirements
+- [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
 - Python 3.x
 - `ttkbootstrap`
 - `pytesseract`
@@ -40,7 +41,6 @@ _Dark theme goodness coming soon!_
 - **Save Your Work**: Don’t forget to click 'Save Text' unless you love repeating yourself.
 
 ## 🤖 Behind the Scenes
-PixelReader7 uses **Tesseract OCR** to work its magic. Make sure you have `tesseract.exe` in the right spot, or be ready to point it out!
+PixelReader7 uses **Tesseract OCR** to work its magic. Make sure you have `tesseract.exe` in the right spot, or the app will ask where you've installed that thing.
 
 ## 🎉 Enjoy!
-Extract text like a boss, and may your copy-pasting be ever accurate!
