@@ -17,7 +17,7 @@ The app that lets you extract text from anything on your screen. Need to capture
 5. **Save Text**: A new window will pop up with your extracted text. Copy from it or click 'Save Text' insta save in root folder.
 
 ## 🛠 Requirements
-- [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki)
+- [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki) _(For running on Windows. There are many other models for GNU/Linux distros)_
 - Python 3.x
 - `ttkbootstrap`
 - `pytesseract`
