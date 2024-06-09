@@ -1,7 +1,7 @@
 import os
 import ttkbootstrap as ttk
 from ttkbootstrap import Style
-from tkinter import messagebox, Toplevel, Canvas, filedialog
+from tkinter import messagebox, Toplevel, Canvas, filedialog, Text
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
 import threading
@@ -122,17 +122,20 @@ class ScreenReaderApp:
         text_window.geometry("800x600")
         self.center_window(text_window)  # Center the new window
 
+        # Create a frame to hold the Text widget and the button
+        frame = ttk.Frame(text_window)
+        frame.pack(expand=1, fill='both')
+
         # Create a Text widget to display the extracted text
-        text_widget = ttk.Text(text_window, wrap='word')
-        text_widget.pack(expand=1, fill='both')
-        text_widget.insert(ttk.END, extracted_text)
-        text_widget.config(state=ttk.NORMAL)  # Make the text selectable
+        text_widget = Text(frame, wrap='word')
+        text_widget.pack(side='top', expand=1, fill='both')
+        text_widget.insert('1.0', extracted_text)
+        text_widget.config(state='normal')  # Make the text selectable
 
         # Add a button to save the text and close the window
-        save_button = ttk.Button(text_window, text="Save Text",
-                                 command=lambda: self.save_extracted_text(extracted_text, text_window),
-                                 bootstyle="success")
-        save_button.pack(pady=10)
+        save_button = ttk.Button(frame, text="Save Text",
+                                 command=lambda: self.save_extracted_text(extracted_text, text_window), bootstyle="success")
+        save_button.pack(side='bottom', pady=10)
 
     def save_extracted_text(self, text, window):
         with open("Extracted.txt", "a") as file:
