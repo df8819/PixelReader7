@@ -46,7 +46,7 @@ class ScreenReaderApp:
         self.center_window(self.root)  # Center the main window
         self.root.resizable(False, False)
 
-        style = Style(theme="darkly")  # Use the 'darkly' theme from ttkbootstrap
+        style = Style(theme="superhero")  # Use the 'darkly' theme from ttkbootstrap
 
         # Dimension entry
         ttk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
@@ -177,7 +177,7 @@ class ScreenReaderApp:
             nonlocal rect, start_x, start_y
             start_x = canvas.canvasx(event.x)
             start_y = canvas.canvasy(event.y)
-            rect = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline='red', width=2)
+            rect = canvas.create_rectangle(start_x, start_y, start_x, start_y, outline='yellow', width=2)
 
         def on_mouse_move(event):
             nonlocal rect
@@ -217,6 +217,6 @@ class ScreenReaderApp:
 
 
 if __name__ == "__main__":
-    root = ttk.Window(themename="darkly")
+    root = ttk.Window(themename="superhero")
     app = ScreenReaderApp(root)
     root.mainloop()
