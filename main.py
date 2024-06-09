@@ -7,7 +7,7 @@ import pytesseract
 import threading
 import time
 
-VERSION = "v1.0"
+VERSION = "v1.02"
 github_link = "https://github.com/df8819/PixelReader7/"
 
 # Set the tesseract command if not set in the PATH environment variable
