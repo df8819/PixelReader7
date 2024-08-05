@@ -10,7 +10,7 @@ from PIL import ImageGrab, Image, ImageTk
 import pytesseract
 
 
-VERSION = "v1.02"
+VERSION = "v1.03"
 github_link = "https://github.com/df8819/PixelReader7/"
 
 # Set the tesseract command if not set in the PATH environment variable
@@ -45,7 +45,7 @@ class ScreenReaderApp:
 
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
-        self.root.geometry("500x650")
+        self.root.geometry("500x680")
         self.center_window(self.root)  # Center the main window
         self.root.resizable(False, False)
 

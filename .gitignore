@@ -4,5 +4,7 @@ experimental.py
 extracted_text.txt
 extracted_spent.txt
 Extracted.txt
-.idea
+/.idea
+/.build
+/.dist
 main.spec
