@@ -15,6 +15,7 @@ The app that lets you extract text from anything on your screen. Need to capture
 3. **Select Area**: Click 'Select Area' to visually choose your region. 
 4. **Read Area**: Click 'Read Area' to extract text from the area.
 5. **Save Text**: A new window will pop up with your extracted text. Copy from it or click 'Save Text' insta save in root folder.
+6. **Open .txt**: Click 'Extracted.txt' to open the text dump file that was created. Everything will the thrown into this file. No over-write. Just endless pasting.
 
 ## 🛠 Requirements
 - [Tesseract](https://github.com/UB-Mannheim/tesseract/wiki) _(Mandatory for running on Windows. There are many other libraries for GNU/Linux distros)_
