@@ -49,7 +49,7 @@ class ScreenReaderApp:
         self.center_window(self.root)  # Center the main window
         self.root.resizable(False, False)
 
-        style = Style(theme="superhero")  # Use the 'superhero' theme from ttkbootstrap
+        style = Style(theme="superhero")
 
         # Dimension entry
         ttk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
