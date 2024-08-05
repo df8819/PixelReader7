@@ -1,11 +1,14 @@
 import os
+import sys
+import subprocess
+import threading
+import time
 import ttkbootstrap as ttk
 from ttkbootstrap import Style
 from tkinter import messagebox, Toplevel, Canvas, filedialog, Text
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
-import threading
-import time
+
 
 VERSION = "v1.02"
 github_link = "https://github.com/df8819/PixelReader7/"
@@ -13,7 +16,7 @@ github_link = "https://github.com/df8819/PixelReader7/"
 # Set the tesseract command if not set in the PATH environment variable
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Adjust the path to tesseract executable
 
-refresh_rate = 100  # Refresh rate in milliseconds
+REFRESH_RATE = 50  # Refresh rate in milliseconds
 
 
 class ScreenReaderApp:
@@ -46,7 +49,7 @@ class ScreenReaderApp:
         self.center_window(self.root)  # Center the main window
         self.root.resizable(False, False)
 
-        style = Style(theme="superhero")  # Use the 'darkly' theme from ttkbootstrap
+        style = Style(theme="superhero")  # Use the 'superhero' theme from ttkbootstrap
 
         # Dimension entry
         ttk.Label(self.root, text="X:").grid(row=0, column=0, padx=10, pady=5)
@@ -73,15 +76,17 @@ class ScreenReaderApp:
         button_frame = ttk.Frame(self.root)
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
-        # Read Screen Button
-        self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click,
-                                      bootstyle="primary")
-        self.read_button.grid(row=0, column=2, padx=15, pady=5)
-
         # Select Area Button
-        self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area,
-                                             bootstyle="secondary")
-        self.select_area_button.grid(row=0, column=1, padx=15, pady=5)
+        self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area, bootstyle="secondary")
+        self.select_area_button.grid(row=0, column=1, padx=5, pady=5)
+
+        # Read Screen Button
+        self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click, bootstyle="primary")
+        self.read_button.grid(row=0, column=2, padx=5, pady=5)
+
+        # Extracted.txt Button
+        self.extracted_button = ttk.Button(button_frame, text="Extracted.txt", command=self.open_extracted_file, bootstyle="info")
+        self.extracted_button.grid(row=0, column=0, padx=5, pady=5)
 
         # Preview label
         self.text_label = ttk.Label(self.root, text="Live preview of the selected area, ready to be read:")
@@ -90,6 +95,10 @@ class ScreenReaderApp:
         # Preview window
         self.preview_label = ttk.Label(self.root)
         self.preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
+
+        # Version label
+        version_label = ttk.Label(self.root, text=f"Version: {VERSION}")
+        version_label.grid(row=7, column=0, columnspan=2, pady=5)
 
     def center_window(self, window):
         window.update_idletasks()
@@ -119,46 +128,72 @@ class ScreenReaderApp:
         # Create a new Toplevel window to display the extracted text
         text_window = Toplevel(self.root)
         text_window.title("Extracted Text")
-        text_window.geometry("800x600")
+
+        # Set window size relative to screen size
+        screen_width = text_window.winfo_screenwidth()
+        screen_height = text_window.winfo_screenheight()
+        window_width = int(screen_width * 0.3)
+        window_height = int(screen_height * 0.4)
+        text_window.geometry(f"{window_width}x{window_height}")
+
         self.center_window(text_window)  # Center the new window
 
-        # Create a frame to hold the Text widget and the button
+        # Create a frame to hold the Text widget
         frame = ttk.Frame(text_window)
-        frame.pack(expand=1, fill='both')
+        frame.pack(expand=1, fill='both', padx=10, pady=10)
 
         # Create a Text widget to display the extracted text
         text_widget = Text(frame, wrap='word')
-        text_widget.pack(side='top', expand=1, fill='both')
+        text_widget.pack(expand=1, fill='both')
         text_widget.insert('1.0', extracted_text)
         text_widget.config(state='normal')  # Make the text selectable
 
         # Add a button to save the text and close the window
-        save_button = ttk.Button(frame, text="Save Text",
-                                 command=lambda: self.save_extracted_text(extracted_text, text_window), bootstyle="success")
-        save_button.pack(side='bottom', pady=10)
+        save_button = ttk.Button(text_window, text="Save Text", command=lambda: self.save_extracted_text(extracted_text, text_window), bootstyle="success")
+        save_button.pack(pady=10)
 
-    def save_extracted_text(self, text, window):
+    @staticmethod
+    def save_extracted_text(text, window):
         with open("Extracted.txt", "a") as file:
             file.write(text + "\n")
         window.destroy()
 
+    def open_extracted_file(self):
+        file_path = "Extracted.txt"
+        if os.path.exists(file_path):
+            if sys.platform == "win32":
+                os.startfile(file_path)
+            elif sys.platform == "darwin":
+                subprocess.call(["open", file_path])
+            else:  # linux variants
+                subprocess.call(["xdg-open", file_path])
+        else:
+            messagebox.showinfo("File Not Found", "The Extracted.txt file does not exist yet.")
+
     def update_preview(self):
         while self.is_running:
             try:
+                start_time = time.time()
+
                 x = int(self.entry_x.get())
                 y = int(self.entry_y.get())
                 width = int(self.entry_width.get())
                 height = int(self.entry_height.get())
+
                 img = ImageGrab.grab(bbox=(x, y, x + width, y + height))
                 img = img.resize((480, 400))
                 img = ImageTk.PhotoImage(img)
+
                 self.preview_label.config(image=img)
                 self.preview_label.image = img
+
+                elapsed_time = time.time() - start_time
+                sleep_time = max(0, (REFRESH_RATE / 1000.0) - elapsed_time)
+                time.sleep(sleep_time)
             except ValueError:
                 pass
             except Exception as e:
                 print(f"Error: {e}")
-            time.sleep(refresh_rate / 1000.0)
 
     def select_area(self):
         self.is_running = False  # Stop the preview update while selecting area
