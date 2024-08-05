@@ -6,7 +6,7 @@ The app that lets you extract text from anything on your screen. Need to capture
 ## 🔥 Features
 - **Dark Theme**: Because why not.
 - **Real-Time Preview**: See what you’re about to capture.
-- **Super Fast**: 100ms refresh rate. Useless but smoother.
+- **Super Fast**: 50ms refresh rate. Useless but smoother.
 - **Select Area**: Easy area selection.
 
 ## 🚀 How to Use
