@@ -1,10 +1,8 @@
 total_spent.py
 testing_stuff.py
 experimental.py
-extracted_text.txt
-extracted_spent.txt
-Extracted.txt
-.idea/
-.build/
-.dist/
-main.spec
+*.txt
+*.spec
+/.idea
+/build
+/dist
