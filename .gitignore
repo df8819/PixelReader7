@@ -3,6 +3,8 @@ testing_stuff.py
 experimental.py
 *.txt
 *.spec
+*.exe
+*.zip
 /.idea
 /build
 /dist
