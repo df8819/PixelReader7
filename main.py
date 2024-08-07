@@ -80,7 +80,7 @@ class ScreenReaderApp:
         # Extracted.txt Button
         self.extracted_button = ttk.Button(button_frame, text="Extracted.txt", command=self.open_extracted_file, bootstyle="info")
         self.extracted_button.grid(row=0, column=0, padx=5, pady=5)
-        
+
         # Select Area Button
         self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area, bootstyle="secondary")
         self.select_area_button.grid(row=0, column=1, padx=5, pady=5)
