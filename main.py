@@ -8,9 +8,10 @@ from ttkbootstrap import Style
 from tkinter import messagebox, Toplevel, Canvas, filedialog, Text
 from PIL import ImageGrab, Image, ImageTk
 import pytesseract
+import webbrowser
 
 
-VERSION = "v1.03"
+VERSION = "v1.04"
 github_link = "https://github.com/df8819/PixelReader7/"
 
 # Set the tesseract command if not set in the PATH environment variable
@@ -97,8 +98,12 @@ class ScreenReaderApp:
         self.preview_label.grid(row=6, column=0, columnspan=2, padx=10, pady=5)
 
         # Version label
-        version_label = ttk.Label(self.root, text=f"Version: {VERSION}")
+        version_label = ttk.Label(self.root, text=f"GitHub - {VERSION}", cursor="hand2", foreground="grey")
         version_label.grid(row=7, column=0, columnspan=2, pady=5)
+        version_label.bind("<Button-1>", lambda e: self.open_github_link())
+
+    def open_github_link(self):
+        webbrowser.open(github_link)
 
     def center_window(self, window):
         window.update_idletasks()
