@@ -77,6 +77,10 @@ class ScreenReaderApp:
         button_frame = ttk.Frame(self.root)
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
+        # Extracted.txt Button
+        self.extracted_button = ttk.Button(button_frame, text="Extracted.txt", command=self.open_extracted_file, bootstyle="info")
+        self.extracted_button.grid(row=0, column=0, padx=5, pady=5)
+        
         # Select Area Button
         self.select_area_button = ttk.Button(button_frame, text="Select Area", command=self.select_area, bootstyle="secondary")
         self.select_area_button.grid(row=0, column=1, padx=5, pady=5)
@@ -85,9 +89,9 @@ class ScreenReaderApp:
         self.read_button = ttk.Button(button_frame, text="Read Area", command=self.on_read_button_click, bootstyle="primary")
         self.read_button.grid(row=0, column=2, padx=5, pady=5)
 
-        # Extracted.txt Button
-        self.extracted_button = ttk.Button(button_frame, text="Extracted.txt", command=self.open_extracted_file, bootstyle="info")
-        self.extracted_button.grid(row=0, column=0, padx=5, pady=5)
+        # Test Button
+        # self.test_button = ttk.Button(button_frame, text="TEST", command=self.test_test, bootstyle="danger")
+        # self.test_button.grid(row=0, column=3, padx=5, pady=5)
 
         # Preview label
         self.text_label = ttk.Label(self.root, text="Live preview of the selected area, ready to be read:")
@@ -101,6 +105,9 @@ class ScreenReaderApp:
         version_label = ttk.Label(self.root, text=f"GitHub - {VERSION}", cursor="hand2", foreground="grey")
         version_label.grid(row=7, column=0, columnspan=2, pady=5)
         version_label.bind("<Button-1>", lambda e: self.open_github_link())
+
+    # def test_test(self):
+        # (messagebox.askyesno("hi", "Hi"))
 
     def open_github_link(self):
         webbrowser.open(github_link)
