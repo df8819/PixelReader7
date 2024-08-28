@@ -53,8 +53,7 @@ class ScreenReaderApp:
 
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
-        scaling_factor = self.root.tk.call('tk', 'scaling')
-        self.root.geometry(f"{int(500 * scaling_factor)}x{int(680 * scaling_factor)}")
+        self.root.geometry("500x680")
         self.center_window(self.root)  # Center the main window
         self.root.resizable(True, True)
 
