@@ -53,7 +53,7 @@ class ScreenReaderApp:
 
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
-        self.root.geometry("500x680")
+        self.root.geometry("500x780")
         self.center_window(self.root)  # Center the main window
         self.root.resizable(True, True)
 
@@ -147,13 +147,15 @@ class ScreenReaderApp:
         # Create a new Toplevel window to display the extracted text
         text_window = Toplevel(self.root)
         text_window.title("Extracted Text")
+        text_window.geometry("800x600")
 
-        # Set window size relative to screen size
-        screen_width = text_window.winfo_screenwidth()
-        screen_height = text_window.winfo_screenheight()
-        window_width = int(screen_width * 0.3)
-        window_height = int(screen_height * 0.4)
-        text_window.geometry(f"{window_width}x{window_height}")
+        # Set window size relative to screen size (TEST)
+
+        # screen_width = text_window.winfo_screenwidth()
+        # screen_height = text_window.winfo_screenheight()
+        # window_width = int(screen_width * 0.3)
+        # window_height = int(screen_height * 0.4)
+        # text_window.geometry(f"{window_width}x{window_height}")
 
         self.center_window(text_window)  # Center the new window
 
