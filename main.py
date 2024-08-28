@@ -22,7 +22,7 @@ REFRESH_RATE = 50  # Refresh rate in milliseconds
 
 if sys.platform == "win32":
     try:
-        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+        ctypes.windll.user32.SetProcessDPIAware()
     except Exception as e:
         print(f"Failed to set DPI awareness: {e}")
 
@@ -53,7 +53,8 @@ class ScreenReaderApp:
 
     def setup_ui(self):
         self.root.title("PixelReader7 - Extract text from everything")
-        self.root.geometry("500x680")
+        scaling_factor = self.root.tk.call('tk', 'scaling')
+        self.root.geometry(f"{int(500 * scaling_factor)}x{int(680 * scaling_factor)}")
         self.center_window(self.root)  # Center the main window
         self.root.resizable(True, True)
 
