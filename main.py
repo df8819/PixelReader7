@@ -3,10 +3,11 @@ import sys
 import subprocess
 import threading
 import time
+import ctypes
 import ttkbootstrap as ttk
 from ttkbootstrap import Style
 from tkinter import messagebox, Toplevel, Canvas, filedialog, Text
-from PIL import ImageGrab, Image, ImageTk
+from PIL import ImageGrab, ImageTk
 import pytesseract
 import webbrowser
 
@@ -18,6 +19,12 @@ github_link = "https://github.com/df8819/PixelReader7/"
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Adjust the path to tesseract executable
 
 REFRESH_RATE = 50  # Refresh rate in milliseconds
+
+if sys.platform == "win32":
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except Exception as e:
+        print(f"Failed to set DPI awareness: {e}")
 
 
 class ScreenReaderApp:
@@ -48,7 +55,7 @@ class ScreenReaderApp:
         self.root.title("PixelReader7 - Extract text from everything")
         self.root.geometry("500x680")
         self.center_window(self.root)  # Center the main window
-        self.root.resizable(False, False)
+        self.root.resizable(True, True)
 
         style = Style(theme="superhero")
 
